@@ -1,0 +1,27 @@
+name: foo compile
+
+on: workflow_dispatch
+
+
+jobs:
+  Win:
+    runs-on: windows-latest
+    name: MSVC-${{matrix.cxx}}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install packages
+        run: |
+          python -m pip install meson ninja
+
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Compile
+        env:
+          CC: cl
+          CXX: cl
+        run: |
+          meson build --buildtype=release # Default is debug
+          cd build
+          ninja
+      - run: ls -al
